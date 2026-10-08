@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contracts/v0.1/handoff-receipt.schema.json",
+  "title": "FA-06 Local Admission Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "work_id",
+    "envelope_sha256",
+    "key_id",
+    "issuer_id_claim",
+    "nonce",
+    "shared_key_verified",
+    "person_or_device_identity_authenticated",
+    "operator_consent_verified",
+    "export_received",
+    "interop_receipt",
+    "authority_granted",
+    "action_executed",
+    "notification_dispatched",
+    "memory_admitted"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.handoff_receipt.v0.1"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "envelope_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "key_id": {
+      "type": "string"
+    },
+    "issuer_id_claim": {
+      "type": "string"
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "shared_key_verified": {
+      "const": true
+    },
+    "person_or_device_identity_authenticated": {
+      "const": false
+    },
+    "operator_consent_verified": {
+      "const": false
+    },
+    "export_received": {
+      "const": true
+    },
+    "interop_receipt": {
+      "type": "object"
+    },
+    "authority_granted": {
+      "const": false
+    },
+    "action_executed": {
+      "const": false
+    },
+    "notification_dispatched": {
+      "const": false
+    },
+    "memory_admitted": {
+      "const": false
+    }
+  }
+}

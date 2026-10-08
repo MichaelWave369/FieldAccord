@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contracts/v0.1/authenticated-export.schema.json",
+  "title": "FA-06 Shared-Key Export Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "key_id",
+    "issuer_id",
+    "nonce",
+    "work_id",
+    "source_kind",
+    "source_locator",
+    "issued_at",
+    "expires_at",
+    "export_sha256",
+    "export",
+    "mac_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.authenticated_export.v0.1"
+    },
+    "key_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,63}$"
+    },
+    "issuer_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "source_kind": {
+      "enum": [
+        "vessie.dlam_context_packet.v1",
+        "phios.phivessel_observation.v0.1"
+      ]
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "issued_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "expires_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "export_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "export": {
+      "type": "object"
+    },
+    "mac_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

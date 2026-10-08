@@ -51,3 +51,16 @@ Run:
 Run also:
 
     python -m fieldaccord interop-demo
+
+## FA-06 local handoff and journal
+
+- No production shared secrets, keys, tokens or recipient private data may be checked in.
+- A valid HMAC proves only configured key possession. Never treat it as human identity, operator consent, or action approval.
+- Enforce key-to-issuer and source-kind binding, strict 10-minute TTL, exact content digests and replay-nonce uniqueness across restarts. Never accept a "previously seen" export based only on identical hashes.
+- SQLite is operator-writable. Externally anchor the current work-head before trusting a replay recovered from local disk. Treat rollbacks and multiple independent peers as unqualified.
+- FA-06 may persist locally reviewed WorkIntent and WorkEvent records plus nonce metadata. It cannot call upstream agents, send messages, execute tools, issue permission leases, or import Vessie context into prompts.
+- Keep all CI HMAC keys synthetic and test-only. CLI demo must use a temporary journal.
+
+Run also:
+
+    python -m fieldaccord handoff-demo
