@@ -1,4 +1,4 @@
-name: FA-01 Contract Checks
+name: FA Contract and Continuity Checks
 
 on:
   push:
@@ -16,11 +16,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Contract and negative-control tests
+      - name: Contract, replay and attention negative-control tests
         run: python -m unittest discover -s tests -v
-      - name: Synthetic review-only demonstration
+      - name: FA-01 synthetic review-only demonstration
         run: |
           python -m fieldaccord demo > receipt.json
           python -c 'import json; r=json.load(open("receipt.json")); assert r["decision"]=="REVIEW_REQUIRED" and r["authority_granted"] is False and r["action_executed"] is False'
+      - name: FA-02 synthetic continuity and attention demonstration
+        run: |
+          python -m fieldaccord work-demo > work-demo.json
+          python -c 'import json; r=json.load(open("work-demo.json")); s=r["work_state"]; a=r["attention_decision"]; assert s["status"]=="OPEN" and s["action_executed"] is False and s["authority_granted"] is False and s["notification_dispatched"] is False and a["decision"]=="REVIEW_CANDIDATE" and a["notification_dispatched"] is False and a["authority_granted"] is False'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
