@@ -8,6 +8,7 @@ import sys
 from .core import ContractError, assess, digest
 from .bridge import FIELDDECK, FIELDDECK_LOCATOR, inspect_snapshot
 from .acquisition import acquire_fielddeck, public_summary
+from .interop import inspect_interop, VESSEL
 from .continuity import GENESIS, attention_review, make_event, replay_work
 
 
@@ -96,18 +97,54 @@ def _bridge_demo() -> dict:
     )
 
 
+def _interop_demo() -> dict:
+    """Entirely synthetic Vessie-shaped context; no actual model or PhiOS call."""
+    intent = _read(Path(__file__).resolve().parent.parent / "examples" / "intent.json")
+    export = {
+        "schema_version": "1", "packet_id": "demo-packet", "task_id": "demo-task",
+        "namespace_id": "demo", "agent_id": "vessie", "model_ref": "demo:model",
+        "purpose": "offline_demo", "target_surface": "fieldaccord",
+        "policy_epoch": 0, "authority_decision_ref": "not-an-approval",
+        "ledger_frontier_ref": "demo-ledger", "memory_budget_tokens": 1000,
+        "items": [{"content": "This is not passed to a model."}],
+        "action_authority": "NONE",
+    }
+    locator = "vessie:dlam:context:demo-packet"
+    source_hash = digest(export)
+    intent["requested_capabilities"].append("discovery.read")
+    intent["context_refs"].append({
+        "reference": locator, "sha256": source_hash, "epistemic": "unverified",
+    })
+    opened = make_event(
+        event_id="784e301a-e971-45df-957d-13d4847156e5",
+        work_id=intent["work_id"], sequence=1, previous_hash=GENESIS,
+        occurred_at="2026-10-07T20:00:00Z",
+        actor={"kind": "human", "id": "operator"},
+        kind="WORK_OPENED", data={"intent_sha256": digest(intent)},
+    )
+    return inspect_interop(
+        intent, [opened], export, source_kind=VESSEL, source_locator=locator,
+        expected_payload_sha256=source_hash,
+        expected_state_head=opened["event_hash"], expected_task_id="demo-task",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Field Accord offline coordination contracts")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("demo", help="FA-01 synthetic no-authority assessment")
     sub.add_parser("work-demo", help="FA-02 synthetic work replay and attention advice")
     sub.add_parser("bridge-demo", help="FA-03 synthetic read-only discovery projection")
+    sub.add_parser("interop-demo", help="FA-05 synthetic Vessie/PhiOS interop review")
     sub.add_parser("fetch-fielddeck", help="FA-04 opt-in public GitHub read of reviewed exact commit")
     review = sub.add_parser("assess", help="Assess three local JSON files, without execution")
     for name in ("intent", "capability", "proposal"):
         review.add_argument(f"--{name}", type=Path, required=True)
     args = parser.parse_args()
     try:
+        if args.command == "interop-demo":
+            print(json.dumps(_interop_demo(), indent=2, sort_keys=True))
+            return 0
         if args.command == "fetch-fielddeck":
             print(json.dumps(public_summary(acquire_fielddeck()), indent=2, sort_keys=True))
             return 0

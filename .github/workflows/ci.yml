@@ -1,4 +1,4 @@
-name: Field Accord Contract, Continuity and Pinned Read Checks
+name: Field Accord Contract, Continuity, Pinned Read and Interop Checks
 
 on:
   push:
@@ -31,6 +31,10 @@ jobs:
         run: |
           python -m fieldaccord bridge-demo > bridge-demo.json
           python -c 'import json; r=json.load(open("bridge-demo.json")); assert r["disposition"]=="REVIEW_CANDIDATE" and r["provenance_authenticated"] is False and r["authority_granted"] is False and r["action_executed"] is False and r["notification_dispatched"] is False and r["history_modified"] is False and "task" not in str(r)'
+      - name: FA-05 offline interop demonstration
+        run: |
+          python -m fieldaccord interop-demo > interop-demo.json
+          python -c 'import json; r=json.load(open("interop-demo.json")); assert r["disposition"]=="REVIEW_CANDIDATE" and r["authority_granted"] is False and r["action_executed"] is False and r["memory_admitted"] is False and r["notification_dispatched"] is False and r["projection"]["context_items_admitted"] is False and r["source_identity_authenticated"] is False'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
 

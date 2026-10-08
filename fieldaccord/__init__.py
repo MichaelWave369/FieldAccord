@@ -5,6 +5,7 @@ from .core import (
     validate_intent, validate_capability, validate_proposal,
 )
 from .bridge import inspect_snapshot
+from .interop import inspect_interop
 from .acquisition import acquire_fielddeck, inspect_acquired_fielddeck
 from .continuity import (
     GENESIS, attention_review, make_event, replay_work, validate_event,
@@ -13,6 +14,7 @@ from .continuity import (
 __all__ = [
     "ContractError",
     "inspect_snapshot",
+    "inspect_interop",
     "acquire_fielddeck",
     "inspect_acquired_fielddeck",
     "assess",

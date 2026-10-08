@@ -39,3 +39,15 @@ Run:
 - Hash and TLS checks do not authenticate a GitHub author's identity. Source data can still be wrong.
 - Never run live GitHub fetches in default unit tests; explicit manual smoke only.
 
+
+## FA-05 interop boundary
+
+- `fieldaccord.interop` is OFFLINE and accepts supplied exports only. Do not add network clients, connectors, filesystem writes, or process invocation.
+- Vessie DLAM v1 context packets must retain `action_authority=NONE`; never propagate raw `items`, `purpose`, `authority_decision_ref` or other prompt-bearing content.
+- PhiOS `BRIDGE_STATUS` is an observation, not a lease, a permission grant, or evidence of completed effects. Never connect it to `PhiVesselBridgeService.execute()`.
+- Unknown versions, mismatched task/work identity, malicious extra fields, invalid fingerprints or changed upstream invariants fail closed.
+- A caller-supplied `expected_state_head` and `expected_payload_sha256` must come from independently held anchors. Matching hashes alone do not authenticate people or devices.
+
+Run also:
+
+    python -m fieldaccord interop-demo
