@@ -1,4 +1,4 @@
-name: Field Accord Contracts, Durable Handoff and Producer Boundaries
+name: Field Accord Contracts, Durable Handoff and Native Source Validation
 
 on:
   push:
@@ -43,6 +43,10 @@ jobs:
         run: |
           python -m fieldaccord producer-demo > producer-demo.json
           python -c 'import json; r=json.load(open("producer-demo.json")); assert r["original_item_count"]==1 and r["derived_item_count"]==0 and r["metadata_only"] is True and r["shared_key_verified"] is True and r["operator_consent_verified"] is False and r["authority_granted"] is False and r["action_executed"] is False and r["memory_admitted"] is False'
+      - name: FA-08 native sealed-packet smoke
+        run: |
+          python -m fieldaccord native-demo > native-demo.json
+          python -c 'import json; r=json.load(open("native-demo.json")); assert r["native_seal_valid"] is True and r["original_item_count"]==1 and r["derived_item_count"]==0 and r["private_content_exported"] is False and r["source_identity_authenticated"] is False and r["authority_granted"] is False and r["action_executed"] is False'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
 
