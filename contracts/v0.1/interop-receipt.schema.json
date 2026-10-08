@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contracts/v0.1/interop-receipt.schema.json",
+  "title": "FA-05 interoperability review receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "engine",
+    "work_id",
+    "source_kind",
+    "source_locator_sha256",
+    "payload_sha256",
+    "state_head_sha256",
+    "intent_sha256",
+    "disposition",
+    "projection",
+    "source_identity_authenticated",
+    "source_freshness_verified",
+    "authority_granted",
+    "action_executed",
+    "notification_dispatched",
+    "memory_admitted",
+    "work_history_modified",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.interop_receipt.v0.1"
+    },
+    "engine": {
+      "const": "fa-05.0.1"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "source_kind": {
+      "enum": [
+        "vessie.dlam_context_packet.v1",
+        "phios.phivessel_observation.v0.1"
+      ]
+    },
+    "source_locator_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "state_head_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "intent_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "disposition": {
+      "const": "REVIEW_CANDIDATE"
+    },
+    "projection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projection_kind",
+            "packet_id",
+            "task_id",
+            "namespace_id",
+            "agent_id",
+            "model_identity_sha256",
+            "policy_epoch_claim",
+            "ledger_frontier_ref_sha256",
+            "item_count",
+            "context_items_admitted",
+            "model_context_delivered",
+            "model_swap_safe_checkpoint_only"
+          ],
+          "properties": {
+            "projection_kind": {
+              "const": "context_metadata_only"
+            },
+            "packet_id": {
+              "type": "string"
+            },
+            "task_id": {
+              "type": "string"
+            },
+            "namespace_id": {
+              "type": "string"
+            },
+            "agent_id": {
+              "type": "string"
+            },
+            "model_identity_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "policy_epoch_claim": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ledger_frontier_ref_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "item_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 64
+            },
+            "context_items_admitted": {
+              "const": false
+            },
+            "model_context_delivered": {
+              "const": false
+            },
+            "model_swap_safe_checkpoint_only": {
+              "const": true
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projection_kind",
+            "source_id_sha256",
+            "observed_at_claim",
+            "observation_sha256",
+            "observe_available_claim",
+            "proposal_available_claim",
+            "execute_available_claim",
+            "source_clock_verified",
+            "source_identity_authenticated",
+            "lease_evaluated"
+          ],
+          "properties": {
+            "projection_kind": {
+              "const": "bridge_status_metadata_only"
+            },
+            "source_id_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "observed_at_claim": {
+              "type": "string"
+            },
+            "observation_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "observe_available_claim": {
+              "type": "boolean"
+            },
+            "proposal_available_claim": {
+              "type": "boolean"
+            },
+            "execute_available_claim": {
+              "type": "boolean"
+            },
+            "source_clock_verified": {
+              "const": false
+            },
+            "source_identity_authenticated": {
+              "const": false
+            },
+            "lease_evaluated": {
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "source_identity_authenticated": {
+      "const": false
+    },
+    "source_freshness_verified": {
+      "const": false
+    },
+    "authority_granted": {
+      "const": false
+    },
+    "action_executed": {
+      "const": false
+    },
+    "notification_dispatched": {
+      "const": false
+    },
+    "memory_admitted": {
+      "const": false
+    },
+    "work_history_modified": {
+      "const": false
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
