@@ -183,6 +183,75 @@ def _handoff_demo() -> dict:
     return {'receipt': result, 'resumed_status': resumed['status'],
             'replay_blocked': replay_blocked, 'database_temporary': True}
 
+def _producer_demo() -> dict:
+    """FA-07 producer to local SQLite journal; never opens a network port."""
+    import tempfile
+    from pathlib import Path
+    from .handoff import WorkJournal
+    from .producers import issue_producer_envelope, frame_export, admit_export_frame
+    from .interop import VESSEL
+    private_packet = {
+        "schema_version": "1", "packet_id": "producer-demo",
+        "task_id": "demo-task", "namespace_id": "demons", "agent_id": "vessie",
+        "model_ref": "sensitive:model", "purpose": "private prompt composition",
+        "target_surface": "private-model", "policy_epoch": 2,
+        "authority_decision_ref": "policy-private",
+        "ledger_frontier_ref": "private-ledger",
+        "memory_budget_tokens": 1000,
+        "items": [{"private": "this must not be exported"}],
+        "action_authority": "NONE",
+    }
+    secret = b"FA-07-DEMO-ONLY-UNSAFE-FOR-PRODUCTION-00000000"
+    sealed = issue_producer_envelope(
+        private_packet, source_kind=VESSEL,
+        work_id="0b8e99c6-be64-43fa-9895-d68d15dc80aa",
+        issuer_id="vessie:demo", key_id="vessie-demo",
+        shared_secret=secret, issued_at="2026-10-07T22:00:00Z",
+        nonce="aabbccddeeff00112233445566778899",
+    )
+    locator = sealed["source_locator"]
+    intent = {
+        "schema": "fa.work_intent.v0.1",
+        "work_id": sealed["work_id"],
+        "initiator": {"kind": "human", "id": "demo_operator"},
+        "objective": "Inspect one metadata-only Vessie handoff with no execution.",
+        "requested_capabilities": ["discovery.read"],
+        "attention_policy": "important",
+        "context_refs": [{
+            "reference": locator,
+            "sha256": sealed["export_sha256"],
+            "epistemic": "unverified",
+        }],
+    }
+    opened = make_event(
+        event_id="76df5f25-c6fa-4db9-a815-77a84f4ae7dc",
+        work_id=intent["work_id"], sequence=1,
+        previous_hash=GENESIS, occurred_at="2026-10-07T22:00:00Z",
+        actor={"kind": "human", "id": "demo_operator"},
+        kind="WORK_OPENED", data={"intent_sha256": digest(intent)},
+    )
+    keys = {"vessie-demo": {"issuer_id": "vessie:demo",
+            "source_kind": VESSEL, "secret": secret}}
+    with tempfile.TemporaryDirectory() as temp:
+        with WorkJournal(Path(temp) / "producer.sqlite3") as store:
+            head = store.begin_work(intent, opened)["head_hash"]
+            receipt = admit_export_frame(
+                store, frame_export(sealed), keyring=keys,
+                now="2026-10-07T22:00:01Z", expected_head=head,
+                expected_task_id="demo-task",
+            )
+    return {
+        "derived_item_count": len(sealed["export"]["items"]),
+        "original_item_count": len(private_packet["items"]),
+        "metadata_only": sealed["export"]["items"] == [],
+        "shared_key_verified": receipt["shared_key_verified"],
+        "operator_consent_verified": receipt["operator_consent_verified"],
+        "authority_granted": receipt["authority_granted"],
+        "action_executed": receipt["action_executed"],
+        "memory_admitted": receipt["memory_admitted"],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Field Accord offline coordination contracts")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -191,12 +260,16 @@ def main() -> int:
     sub.add_parser("bridge-demo", help="FA-03 synthetic read-only discovery projection")
     sub.add_parser("interop-demo", help="FA-05 synthetic Vessie/PhiOS interop review")
     sub.add_parser("handoff-demo", help="FA-06 synthetic shared-key and durable replay check")
+    sub.add_parser("producer-demo", help="FA-07 synthetic producer to local journal handoff")
     sub.add_parser("fetch-fielddeck", help="FA-04 opt-in public GitHub read of reviewed exact commit")
     review = sub.add_parser("assess", help="Assess three local JSON files, without execution")
     for name in ("intent", "capability", "proposal"):
         review.add_argument(f"--{name}", type=Path, required=True)
     args = parser.parse_args()
     try:
+        if args.command == "producer-demo":
+            print(json.dumps(_producer_demo(), indent=2, sort_keys=True))
+            return 0
         if args.command == "handoff-demo":
             print(json.dumps(_handoff_demo(), indent=2, sort_keys=True))
             return 0

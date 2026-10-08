@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contracts/v0.1/vessie-producer-metadata.schema.json",
+  "title": "FA-07 Derived Vessie DLAM Metadata Export (never prompt content)",
+  "description": "A derived, redacted DLAM packet for FieldAccord handoff. Not the original source packet.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "task_id",
+    "namespace_id",
+    "agent_id",
+    "model_ref",
+    "purpose",
+    "target_surface",
+    "policy_epoch",
+    "authority_decision_ref",
+    "ledger_frontier_ref",
+    "memory_budget_tokens",
+    "items",
+    "action_authority"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "packet_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "namespace_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "model_ref": {
+      "type": "string",
+      "pattern": "^model-sha256:[0-9a-f]{64}$"
+    },
+    "purpose": {
+      "const": "fieldaccord_metadata_observation"
+    },
+    "target_surface": {
+      "const": "fieldaccord"
+    },
+    "policy_epoch": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "authority_decision_ref": {
+      "const": "none:producer-observation"
+    },
+    "ledger_frontier_ref": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "memory_budget_tokens": {
+      "const": 0
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "action_authority": {
+      "const": "NONE"
+    }
+  }
+}

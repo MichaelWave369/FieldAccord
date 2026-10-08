@@ -64,3 +64,16 @@ Run also:
 Run also:
 
     python -m fieldaccord handoff-demo
+
+## FA-07 producer adapters
+
+- Producer adapters consume *supplied* native-format Vessie/PhiOS dictionaries; they must not call upstream runtime `execute`, `propose`, memory retrieval, or prompt admission.
+- Vessie export content MUST be scrubbed BEFORE signing/transmission: never export `items`, original purpose, raw model identity, raw ledger-frontier pointer, or policy decision content.
+- A scrubbed Vessie record is a DERIVED observation; the recipient WorkIntent pins its DERIVED digest, never assumes it represents raw source bytes.
+- Transport helpers only frame/decode bytes. No listener or service is opened by these modules. A local socket-pair test is not a deployed live socket bridge.
+- Keep HMAC secrets supplied explicitly by an operator-controlled host and out of committed code. Never confuse shared-key possession with authenticated human consent.
+- Keep negative tests for oversized/concatenated/truncated frames, mutated source, wrong signer/source, wrong WorkIntent pin, nonce replay, and no-authority receipts.
+
+Run also:
+
+    python -m fieldaccord producer-demo

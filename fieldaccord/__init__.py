@@ -7,6 +7,10 @@ from .core import (
 from .bridge import inspect_snapshot
 from .interop import inspect_interop
 from .handoff import WorkJournal, sign_export_for_testing, verify_export
+from .producers import (
+    vessie_metadata_export, phios_status_export, issue_producer_envelope,
+    frame_export, decode_export_frame, admit_export_frame,
+)
 from .acquisition import acquire_fielddeck, inspect_acquired_fielddeck
 from .continuity import (
     GENESIS, attention_review, make_event, replay_work, validate_event,
@@ -19,6 +23,12 @@ __all__ = [
     "WorkJournal",
     "sign_export_for_testing",
     "verify_export",
+    "vessie_metadata_export",
+    "phios_status_export",
+    "issue_producer_envelope",
+    "frame_export",
+    "decode_export_frame",
+    "admit_export_frame",
     "acquire_fielddeck",
     "inspect_acquired_fielddeck",
     "assess",
