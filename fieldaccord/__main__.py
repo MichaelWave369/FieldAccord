@@ -129,6 +129,60 @@ def _interop_demo() -> dict:
     )
 
 
+def _handoff_demo() -> dict:
+    """Synthetic local durable handoff; fake shared key and temporary database."""
+    import tempfile
+    from pathlib import Path
+    from .handoff import WorkJournal, sign_export_for_testing
+    intent = _read(Path(__file__).resolve().parent.parent / 'examples' / 'intent.json')
+    export = {
+        'schema_version': '1', 'packet_id': 'handoff-demo', 'task_id': 'demo-task',
+        'namespace_id': 'demo', 'agent_id': 'vessie', 'model_ref': 'demo:model',
+        'purpose': 'synthetic', 'target_surface': 'fieldaccord', 'policy_epoch': 0,
+        'authority_decision_ref': 'no-grant', 'ledger_frontier_ref': 'demo-frontier',
+        'memory_budget_tokens': 100, 'items': [{'untrusted': 'never admitted'}],
+        'action_authority': 'NONE',
+    }
+    locator = 'vessie:dlam:context:handoff-demo'
+    intent['requested_capabilities'].append('discovery.read')
+    intent['context_refs'].append({
+        'reference': locator, 'sha256': digest(export), 'epistemic': 'unverified',
+    })
+    opened = make_event(
+        event_id='21e19f5e-70b9-4692-b9c5-196355d91746',
+        work_id=intent['work_id'], sequence=1, previous_hash=GENESIS,
+        occurred_at='2026-10-07T20:00:00Z',
+        actor={'kind': 'human', 'id': 'operator'},
+        kind='WORK_OPENED', data={'intent_sha256': digest(intent)},
+    )
+    secret = b'ONLY-FOR-FA-06-DEMO-DO-NOT-USE-IN-PRODUCTION-KEY!'
+    envelope = sign_export_for_testing(
+        key_id='vessie-demo', issuer_id='vessie:local', secret=secret,
+        nonce='1234567890abcdef1234567890abcdef',
+        work_id=intent['work_id'], source_kind=VESSEL, source_locator=locator,
+        issued_at='2026-10-07T20:00:00Z',
+        expires_at='2026-10-07T20:08:00Z', export=export,
+    )
+    keys = {'vessie-demo': {'issuer_id':'vessie:local','source_kind':VESSEL,'secret':secret}}
+    with tempfile.TemporaryDirectory() as location:
+        with WorkJournal(Path(location) / 'handoff.sqlite3') as store:
+            state = store.begin_work(intent, opened)
+            result = store.admit_export(
+                envelope, keyring=keys, now='2026-10-07T20:01:00Z',
+                expected_head=state['head_hash'], expected_task_id='demo-task',
+            )
+        with WorkJournal(Path(location) / 'handoff.sqlite3') as store:
+            resumed = store.state(intent['work_id'], expected_head=state['head_hash'])
+            try:
+                store.admit_export(envelope, keyring=keys, now='2026-10-07T20:01:00Z',
+                    expected_head=state['head_hash'], expected_task_id='demo-task')
+            except ContractError:
+                replay_blocked = True
+            else:
+                replay_blocked = False
+    return {'receipt': result, 'resumed_status': resumed['status'],
+            'replay_blocked': replay_blocked, 'database_temporary': True}
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Field Accord offline coordination contracts")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -136,12 +190,16 @@ def main() -> int:
     sub.add_parser("work-demo", help="FA-02 synthetic work replay and attention advice")
     sub.add_parser("bridge-demo", help="FA-03 synthetic read-only discovery projection")
     sub.add_parser("interop-demo", help="FA-05 synthetic Vessie/PhiOS interop review")
+    sub.add_parser("handoff-demo", help="FA-06 synthetic shared-key and durable replay check")
     sub.add_parser("fetch-fielddeck", help="FA-04 opt-in public GitHub read of reviewed exact commit")
     review = sub.add_parser("assess", help="Assess three local JSON files, without execution")
     for name in ("intent", "capability", "proposal"):
         review.add_argument(f"--{name}", type=Path, required=True)
     args = parser.parse_args()
     try:
+        if args.command == "handoff-demo":
+            print(json.dumps(_handoff_demo(), indent=2, sort_keys=True))
+            return 0
         if args.command == "interop-demo":
             print(json.dumps(_interop_demo(), indent=2, sort_keys=True))
             return 0

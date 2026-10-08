@@ -6,6 +6,7 @@ from .core import (
 )
 from .bridge import inspect_snapshot
 from .interop import inspect_interop
+from .handoff import WorkJournal, sign_export_for_testing, verify_export
 from .acquisition import acquire_fielddeck, inspect_acquired_fielddeck
 from .continuity import (
     GENESIS, attention_review, make_event, replay_work, validate_event,
@@ -15,6 +16,9 @@ __all__ = [
     "ContractError",
     "inspect_snapshot",
     "inspect_interop",
+    "WorkJournal",
+    "sign_export_for_testing",
+    "verify_export",
     "acquire_fielddeck",
     "inspect_acquired_fielddeck",
     "assess",

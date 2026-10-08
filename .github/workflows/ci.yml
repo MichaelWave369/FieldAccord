@@ -1,4 +1,4 @@
-name: Field Accord Contract, Continuity, Pinned Read and Interop Checks
+name: Field Accord Contract, Continuity, Pinned Read and Durable Handoff
 
 on:
   push:
@@ -35,6 +35,10 @@ jobs:
         run: |
           python -m fieldaccord interop-demo > interop-demo.json
           python -c 'import json; r=json.load(open("interop-demo.json")); assert r["disposition"]=="REVIEW_CANDIDATE" and r["authority_granted"] is False and r["action_executed"] is False and r["memory_admitted"] is False and r["notification_dispatched"] is False and r["projection"]["context_items_admitted"] is False and r["source_identity_authenticated"] is False'
+      - name: FA-06 offline durable HMAC handoff smoke
+        run: |
+          python -m fieldaccord handoff-demo > handoff-demo.json
+          python -c 'import json; r=json.load(open("handoff-demo.json")); h=r["receipt"]; assert r["replay_blocked"] is True and r["resumed_status"]=="OPEN" and h["shared_key_verified"] is True and h["person_or_device_identity_authenticated"] is False and h["operator_consent_verified"] is False and h["authority_granted"] is False and h["action_executed"] is False and h["memory_admitted"] is False'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
 
