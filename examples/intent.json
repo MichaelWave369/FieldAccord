@@ -1,0 +1,21 @@
+{
+  "schema": "fa.work_intent.v0.1",
+  "work_id": "b4c722a4-9d26-4ba8-9a8c-dbb4aa39528c",
+  "initiator": {
+    "kind": "human",
+    "id": "operator"
+  },
+  "objective": "Investigate failing PhiCade CI and propose a candidate repair without merging.",
+  "requested_capabilities": [
+    "github.ci.read",
+    "github.patch.draft"
+  ],
+  "attention_policy": "important",
+  "context_refs": [
+    {
+      "reference": "github:MichaelWave369/PhiCade/actions/runs/synthetic",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "epistemic": "unverified"
+    }
+  ]
+}

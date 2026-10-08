@@ -1,0 +1,12 @@
+{
+  "schema": "fa.action_proposal.v0.1",
+  "proposal_id": "90b7c940-e4cb-4bb6-94bc-e1e712cfa304",
+  "work_id": "b4c722a4-9d26-4ba8-9a8c-dbb4aa39528c",
+  "capability_id": "github.ci.read",
+  "action": "inspect_ci",
+  "resource": "github:MichaelWave369/PhiCade",
+  "payload_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "evidence_refs": [
+    "github:MichaelWave369/PhiCade/actions/runs/synthetic"
+  ]
+}

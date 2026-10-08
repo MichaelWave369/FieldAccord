@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contract/v0.1/capability-declaration",
+  "title": "CapabilityDeclaration FA-01",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "provider_id",
+    "capability_id",
+    "effect",
+    "scope"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.capability_declaration.v0.1"
+    },
+    "provider_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "capability_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+    },
+    "effect": {
+      "enum": [
+        "read",
+        "write",
+        "external",
+        "physical"
+      ]
+    },
+    "scope": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    }
+  }
+}

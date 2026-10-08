@@ -1,0 +1,9 @@
+{
+  "schema": "fa.capability_declaration.v0.1",
+  "provider_id": "agent:ci-investigator",
+  "capability_id": "github.ci.read",
+  "effect": "read",
+  "scope": [
+    "github:MichaelWave369/PhiCade"
+  ]
+}
