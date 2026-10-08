@@ -20,9 +20,11 @@ Field Accord is a **coordination contract**, not a new all-powerful agent. It le
 
 - **FA-06 (merged):** local HMAC-sealed Vessie/PhiOS export handoffs with 10-minute freshness, persisted replay/nonce refusal, and a SQLite/WAL WorkEvent journal with optimistic-head conflict detection. See [FA-06](docs/FA-06.md).
 
-- **FA-07 (candidate):** producer-side metadata-only Vessie DLAM export + strict PhiOS bridge-status export, short-lived shared-key sealing, bounded local IPC framing and journal-backed admission. See [FA-07](docs/FA-07.md).
+- **FA-07 (merged):** producer-side metadata-only Vessie DLAM export + strict PhiOS bridge-status export, short-lived shared-key sealing, bounded local IPC framing and journal-backed admission. See [FA-07](docs/FA-07.md).
 
-FA-01 through FA-03 and FA-05 through FA-07 remain offline unless an integrating application deliberately connects an external transport. FA-04's `fetch-fielddeck` is a **read-only network operation** and never invokes action workflows or writes to GitHub. No external tools, scripts, credentials, messaging, identity verification, or physical controls are enabled by Field Accord.
+- **FA-08 (candidate):** actual PV-DLAM P1-B sealed context packet and native PhiOS observation-object adapters; verifies original composer hash, enforces zero-authority and redacts source before handoff. [FA-08](docs/FA-08.md).
+
+FA-01 through FA-03 and FA-05 through FA-08 remain offline unless an integrating application deliberately connects an external transport. FA-04's `fetch-fielddeck` is a **read-only network operation** and never invokes action workflows or writes to GitHub. No external tools, scripts, credentials, messaging, identity verification, or physical controls are enabled by Field Accord.
 
 ## Test locally
 
@@ -36,11 +38,12 @@ python -m fieldaccord bridge-demo
 python -m fieldaccord interop-demo
 python -m fieldaccord handoff-demo
 python -m fieldaccord producer-demo
+python -m fieldaccord native-demo
 # Optional: makes one public read-only GitHub API request
 python -m fieldaccord fetch-fielddeck
 ```
 
-The `demo`, `work-demo`, `bridge-demo`, and `interop-demo`, and `handoff-demo`, and `producer-demo` demonstrations use synthetic data and produce **no network activity**. A `REVIEW_CANDIDATE` is a suggestion for a human-governed UI, **not** a notification or permission.
+The `demo`, `work-demo`, `bridge-demo`, and `interop-demo`, and `handoff-demo`, and `producer-demo`, and `native-demo` demonstrations use synthetic data and produce **no network activity**. A `REVIEW_CANDIDATE` is a suggestion for a human-governed UI, **not** a notification or permission.
 
 ## Architectural boundaries
 
@@ -65,11 +68,11 @@ The `demo`, `work-demo`, `bridge-demo`, and `interop-demo`, and `handoff-demo`, 
 
 ## Planned rungs
 
-- **FA-08:** actual upstream Vessie/PhiOS export hooks, independently managed producer keys, local IPC enrollment/consent, externally anchored work heads, and restart/security qualification.
-- **FA-09:** permission-scoped distributed transport and independently authorized execution handoff with action-time revalidation.
+- **FA-09:** native upstream opt-in Vessie/PhiOS export hooks and qualified producer runtime integration with operator-owned local key enrollment and independent head anchors.
+- **FA-10:** local IPC enrollment, revocation, rollback/replay qualification; execution remains a separate authority-bound contract.
 
 ## Project state
 
-Experimental. FA-02's event chain is **not** a trusted distributed event bus, a durable storage engine, or an authenticated notification grant. FA-03's expected digests and projections likewise are **not** source authentication or a tool execution path. FA-04 pins a published public GitHub blob, not a human identity, trusted timeline, operator consent, or a live automation authorization. Replacing a pin must go through human code review. FA-05 is metadata inspection only: it does not authenticate upstream identity or admit context into a model. FA-06's shared-key authentication only proves key possession and SQLite replay protection only covers one local database, not global identity, consent, or an immutable ledger. FA-07 adds an embeddable producer SDK, **not** a deployed Vessie/PhiOS connector or a remotely authenticated transport. Prove remaining boundaries before wiring any execution.
+Experimental. FA-02's event chain is **not** a trusted distributed event bus, a durable storage engine, or an authenticated notification grant. FA-03's expected digests and projections likewise are **not** source authentication or a tool execution path. FA-04 pins a published public GitHub blob, not a human identity, trusted timeline, operator consent, or a live automation authorization. Replacing a pin must go through human code review. FA-05 is metadata inspection only: it does not authenticate upstream identity or admit context into a model. FA-06's shared-key authentication only proves key possession and SQLite replay protection only covers one local database, not global identity, consent, or an immutable ledger. FA-07 adds an embeddable producer SDK, **not** a deployed Vessie/PhiOS connector or a remotely authenticated transport. FA-08 validates the **actual** upstream source formats, but it still does not automatically install or activate hooks inside Vessie/PhiOS. Prove remaining boundaries before wiring any execution.
 
 **Enter the Field. Carbon and silicon, building together.**

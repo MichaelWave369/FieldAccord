@@ -77,3 +77,13 @@ Run also:
 Run also:
 
     python -m fieldaccord producer-demo
+
+## FA-08 native observation and composer seal
+
+- P1-B's actual `ContextComposer._seal()` output includes extra fields absent from the original FA-07 generic envelope contract. Validate exactly the frozen composer keys and verify `sha256("PV-DLAM-CONTEXT|" + canonical_json(unsealed_body))` and the derived `ctx_` packet ID.
+- Reject non-CURRENT and non-READY Vessie packets, unrecognized keys/versions, bad hash, unknown authority, and source data exceeding admission caps. Never forward original private memory items.
+- For PhiOS, only `PhiVesselBridgeObservation.to_dict()` on an explicit `BRIDGE_STATUS` instance is eligible for native export, and still not an authenticated author/source attestation.
+- Producer wrappers never invoke `PhiVesselBridgeService.execute`, mint a lease, change permissions, start a listener, or auto-connect.
+- No production key material in CI or repository. Never claim source hash validates author identity.
+
+    python -m fieldaccord native-demo

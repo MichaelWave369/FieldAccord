@@ -7,6 +7,10 @@ from .core import (
 from .bridge import inspect_snapshot
 from .interop import inspect_interop
 from .handoff import WorkJournal, sign_export_for_testing, verify_export
+from .native import (
+    native_vessie_metadata_export, issue_native_vessie_envelope,
+    native_phios_status_export, issue_native_phios_envelope,
+)
 from .producers import (
     vessie_metadata_export, phios_status_export, issue_producer_envelope,
     frame_export, decode_export_frame, admit_export_frame,
@@ -24,6 +28,10 @@ __all__ = [
     "sign_export_for_testing",
     "verify_export",
     "vessie_metadata_export",
+    "native_vessie_metadata_export",
+    "issue_native_vessie_envelope",
+    "native_phios_status_export",
+    "issue_native_phios_envelope",
     "phios_status_export",
     "issue_producer_envelope",
     "frame_export",

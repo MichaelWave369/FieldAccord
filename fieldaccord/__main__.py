@@ -252,6 +252,50 @@ def _producer_demo() -> dict:
     }
 
 
+def _native_demo() -> dict:
+    """Synthetic P1-B composer output, never a live application connection."""
+    import hashlib
+    from .native import native_vessie_metadata_export, issue_native_vessie_envelope
+    from .core import canonical_json
+    body = {
+        "schema_version": "1",
+        "schema": "superphivessel.dlam.context-packet.v0.1",
+        "task_id": "demo-task", "namespace_id": "demo", "agent_id": "vessie",
+        "genius_profile_ref": None, "model_ref": "test-model",
+        "purpose": "private-source", "target_surface": "private",
+        "policy_epoch": 0, "authority_decision_ref": "private-authority-record",
+        "authority_status": "CURRENT", "ledger_frontier_ref": "demo-frontier",
+        "index_manifest_ref": "fts5:demo:ref", "router_snapshot_ref": None,
+        "tokenizer_id": "demo-regex-v1", "memory_budget_tokens": 100,
+        "query_hash": "c" * 64, "allowed_origins": ["OBSERVED"],
+        "action_authority": "NONE", "disposition": "READY",
+        "used_memory_tokens": 10, "items": [{"content": "private-example"}],
+        "excluded": [], "omitted_dependencies": [],
+        "epistemic_mix": {"OBSERVED": 1},
+    }
+    h = hashlib.sha256(b"PV-DLAM-CONTEXT|" + canonical_json(body)).hexdigest()
+    packet = {**body, "packet_id": "ctx_" + h[:32], "packet_hash": h}
+    sealed = issue_native_vessie_envelope(
+        packet, work_id="adb7aed6-0714-4a97-a173-36a2b5663128",
+        issuer_id="vessie:demo", key_id="test-source",
+        shared_secret=b"ONLY-AN-EXAMPLE-KEY-DO-NOT-USE-THIS-000000000",
+        issued_at="2026-10-07T22:00:00Z", nonce="3" * 32,
+    )
+    derived = native_vessie_metadata_export(packet)
+    return {
+        "schema": "fa.native_demo.v0.1",
+        "native_seal_valid": True,
+        "original_item_count": len(packet["items"]),
+        "derived_item_count": len(derived["items"]),
+        "derived_payload_sha256": sealed["export_sha256"],
+        "private_content_exported": False,
+        "source_identity_authenticated": False,
+        "operator_consent_verified": False,
+        "authority_granted": False,
+        "action_executed": False,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Field Accord offline coordination contracts")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -261,12 +305,16 @@ def main() -> int:
     sub.add_parser("interop-demo", help="FA-05 synthetic Vessie/PhiOS interop review")
     sub.add_parser("handoff-demo", help="FA-06 synthetic shared-key and durable replay check")
     sub.add_parser("producer-demo", help="FA-07 synthetic producer to local journal handoff")
+    sub.add_parser("native-demo", help="FA-08 synthetic native P1-B sealed packet review")
     sub.add_parser("fetch-fielddeck", help="FA-04 opt-in public GitHub read of reviewed exact commit")
     review = sub.add_parser("assess", help="Assess three local JSON files, without execution")
     for name in ("intent", "capability", "proposal"):
         review.add_argument(f"--{name}", type=Path, required=True)
     args = parser.parse_args()
     try:
+        if args.command == "native-demo":
+            print(json.dumps(_native_demo(), indent=2, sort_keys=True))
+            return 0
         if args.command == "producer-demo":
             print(json.dumps(_producer_demo(), indent=2, sort_keys=True))
             return 0
