@@ -1,4 +1,4 @@
-name: Field Accord Contract, Continuity, Pinned Read and Durable Handoff
+name: Field Accord Contracts, Durable Handoff and Producer Boundaries
 
 on:
   push:
@@ -39,6 +39,10 @@ jobs:
         run: |
           python -m fieldaccord handoff-demo > handoff-demo.json
           python -c 'import json; r=json.load(open("handoff-demo.json")); h=r["receipt"]; assert r["replay_blocked"] is True and r["resumed_status"]=="OPEN" and h["shared_key_verified"] is True and h["person_or_device_identity_authenticated"] is False and h["operator_consent_verified"] is False and h["authority_granted"] is False and h["action_executed"] is False and h["memory_admitted"] is False'
+      - name: FA-07 metadata-only producer and journal smoke
+        run: |
+          python -m fieldaccord producer-demo > producer-demo.json
+          python -c 'import json; r=json.load(open("producer-demo.json")); assert r["original_item_count"]==1 and r["derived_item_count"]==0 and r["metadata_only"] is True and r["shared_key_verified"] is True and r["operator_consent_verified"] is False and r["authority_granted"] is False and r["action_executed"] is False and r["memory_admitted"] is False'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
 
