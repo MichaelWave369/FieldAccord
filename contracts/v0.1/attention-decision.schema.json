@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contract/v0.1/attention-decision",
+  "title": "AttentionDecision FA-02",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "work_id",
+    "recipient_id",
+    "urgency",
+    "at",
+    "decision",
+    "reason",
+    "operator_verification_required",
+    "notification_dispatched",
+    "authority_granted"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.attention_decision.v0.1"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "recipient_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+    },
+    "urgency": {
+      "enum": [
+        "routine",
+        "important",
+        "critical"
+      ]
+    },
+    "at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "decision": {
+      "enum": [
+        "HOLD",
+        "REVIEW_CANDIDATE"
+      ]
+    },
+    "reason": {
+      "enum": [
+        "NO_LEASE",
+        "WORK_CLOSED",
+        "WRONG_RECIPIENT",
+        "NOT_YET_ACTIVE",
+        "EXPIRED",
+        "FILTERED",
+        "LEASE_FILTER_MATCH"
+      ]
+    },
+    "operator_verification_required": {
+      "const": true
+    },
+    "notification_dispatched": {
+      "const": false
+    },
+    "authority_granted": {
+      "const": false
+    }
+  }
+}
