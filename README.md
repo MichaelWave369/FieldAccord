@@ -12,9 +12,11 @@ Field Accord is a **coordination contract**, not a new all-powerful agent. It le
 - **FA-01 (merged):** review-only WorkIntent, CapabilityDeclaration, ActionProposal, WorkReceipt and a deterministic no-authority assessment. See [FA-01](docs/FA-01.md).
 - **FA-02 (merged):** append-only, intent-bound WorkEvent chain; deterministic WorkState replay; checkpoints for model handoffs; short-lived, revocable AttentionLease semantics; and read-only attention advice. See [FA-02](docs/FA-02.md).
 
-- **FA-03 (candidate):** source-pinned, offline, read-only FieldDeck v0.6 and NBG epistemic-memory snapshot adapters. No execution authority, no retrieval, and no memory prompt admission. See [FA-03](docs/FA-03.md).
+- **FA-03 (merged):** source-pinned, offline, read-only FieldDeck v0.6 and NBG epistemic-memory snapshot adapters. No execution authority, no retrieval, and no memory prompt admission. See [FA-03](docs/FA-03.md).
 
-All rungs are **offline and non-executing**. No external tools, scripts, credentials, messaging, identity verification, or physical controls are enabled by Field Accord.
+- **FA-04 (candidate):** an explicit opt-in **public HTTPS GET** for a code-reviewed exact FieldDeck v0.7 commit + Git blob, with strict size/JSON/base64/provenance checks and FA-03 WorkIntent replay compatibility. See [FA-04](docs/FA-04.md).
+
+FA-01 through FA-03 remain offline. FA-04's `fetch-fielddeck` is a **read-only network operation** and never invokes action workflows or writes to GitHub. No external tools, scripts, credentials, messaging, identity verification, or physical controls are enabled by Field Accord.
 
 ## Test locally
 
@@ -25,9 +27,11 @@ python -m unittest discover -s tests -v
 python -m fieldaccord demo
 python -m fieldaccord work-demo
 python -m fieldaccord bridge-demo
+# Optional: makes one public read-only GitHub API request
+python -m fieldaccord fetch-fielddeck
 ```
 
-Both demonstrations use synthetic data and produce **no network activity**. A `REVIEW_CANDIDATE` is a suggestion for a human-governed UI, **not** a notification or permission.
+The `demo`, `work-demo`, and `bridge-demo` demonstrations use synthetic data and produce **no network activity**. A `REVIEW_CANDIDATE` is a suggestion for a human-governed UI, **not** a notification or permission.
 
 ## Architectural boundaries
 
@@ -52,11 +56,11 @@ Both demonstrations use synthetic data and produce **no network activity**. A `R
 
 ## Planned rungs
 
-- **FA-04:** independently audited read-only source acquisition, exact pinned blob provenance, anti-replay, and model-swap/restart tests.
-- **FA-05:** bounded handoffs to actual Vessie WorkObjects and PhiOS-authorized execution routes, preserving external authority.
+- **FA-05:** validated Vessie WorkObject/PhiOS export adapters, independently authenticated source identity and append-only journal anchors, provenance/freshness reviews, and multi-device replay/conflict tests.
+- **FA-06:** governed external execution handoff with an independently trusted operator grant and revalidation at effect time.
 
 ## Project state
 
-Experimental. FA-02's event chain is **not** a trusted distributed event bus, a durable storage engine, or an authenticated notification grant. FA-03's expected digests and projections likewise are **not** source authentication or a tool execution path. Prove those boundaries before wiring it to live systems.
+Experimental. FA-02's event chain is **not** a trusted distributed event bus, a durable storage engine, or an authenticated notification grant. FA-03's expected digests and projections likewise are **not** source authentication or a tool execution path. FA-04 pins a published public GitHub blob, not a human identity, trusted timeline, operator consent, or a live automation authorization. Replacing a pin must go through human code review. Prove remaining boundaries before wiring any execution.
 
 **Enter the Field. Carbon and silicon, building together.**

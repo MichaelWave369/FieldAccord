@@ -1,8 +1,9 @@
-name: Field Accord Contract, Continuity and Bridge Checks
+name: Field Accord Contract, Continuity and Pinned Read Checks
 
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -32,3 +33,19 @@ jobs:
           python -c 'import json; r=json.load(open("bridge-demo.json")); assert r["disposition"]=="REVIEW_CANDIDATE" and r["provenance_authenticated"] is False and r["authority_granted"] is False and r["action_executed"] is False and r["notification_dispatched"] is False and r["history_modified"] is False and "task" not in str(r)'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
+
+  manual-public-read:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Opt-in pinned FieldDeck public API read (no tokens or writes)
+        run: |
+          python -m fieldaccord fetch-fielddeck > verified-read.json
+          python -c 'import json; r=json.load(open("verified-read.json")); assert r["source_kind"]=="fielddeck.manifest.v0.7" and r["authority_granted"] is False and r["action_executed"] is False and r["source_authorship_authenticated"] is False and r["projection"]["action_count"]>0'

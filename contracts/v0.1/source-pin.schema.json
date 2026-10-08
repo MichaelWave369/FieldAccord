@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contracts/v0.1/source-pin.schema.json",
+  "title": "FA-04 SourcePin",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "provider",
+    "repository",
+    "path",
+    "commit_sha",
+    "git_blob_sha",
+    "manifest_version",
+    "source_kind",
+    "source_locator"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.source_pin.v0.1"
+    },
+    "provider": {
+      "const": "github_public_contents"
+    },
+    "repository": {
+      "const": "MichaelWave369/FieldDeck"
+    },
+    "path": {
+      "const": "public/fielddeck.manifest.json"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "git_blob_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "manifest_version": {
+      "const": "0.7.0"
+    },
+    "source_kind": {
+      "const": "fielddeck.manifest.v0.7"
+    },
+    "source_locator": {
+      "const": "github:MichaelWave369/FieldDeck/public/fielddeck.manifest.json"
+    }
+  }
+}

@@ -28,3 +28,14 @@ Run:
     python -m fieldaccord demo
     python -m fieldaccord work-demo
     python -m fieldaccord bridge-demo
+
+## FA-04 review contract
+
+- A source pin MUST bind an exact 40-hex GitHub commit and known Git blob ID to the single public FieldDeck manifest file.
+- Never treat the moving \`main\` branch, \`download_url\`, unreviewed URL, or an API-reported hash as a trustworthy substitute for the checked-in pin.
+- The opt-in public fetcher MUST use no credentials and MUST NOT follow redirects, invoke IssueOps, POST, call a local runner, or load external executable instructions.
+- Keep all GET response parsing bounded, reject unknown envelope fields, duplicate JSON keys, nonfinite values, unsafe manifest defaults, and blob mismatch.
+- Never return an action payload or URL from the read-only projection.
+- Hash and TLS checks do not authenticate a GitHub author's identity. Source data can still be wrong.
+- Never run live GitHub fetches in default unit tests; explicit manual smoke only.
+

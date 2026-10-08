@@ -7,6 +7,7 @@ import sys
 
 from .core import ContractError, assess, digest
 from .bridge import FIELDDECK, FIELDDECK_LOCATOR, inspect_snapshot
+from .acquisition import acquire_fielddeck, public_summary
 from .continuity import GENESIS, attention_review, make_event, replay_work
 
 
@@ -101,11 +102,15 @@ def main() -> int:
     sub.add_parser("demo", help="FA-01 synthetic no-authority assessment")
     sub.add_parser("work-demo", help="FA-02 synthetic work replay and attention advice")
     sub.add_parser("bridge-demo", help="FA-03 synthetic read-only discovery projection")
+    sub.add_parser("fetch-fielddeck", help="FA-04 opt-in public GitHub read of reviewed exact commit")
     review = sub.add_parser("assess", help="Assess three local JSON files, without execution")
     for name in ("intent", "capability", "proposal"):
         review.add_argument(f"--{name}", type=Path, required=True)
     args = parser.parse_args()
     try:
+        if args.command == "fetch-fielddeck":
+            print(json.dumps(public_summary(acquire_fielddeck()), indent=2, sort_keys=True))
+            return 0
         if args.command == "bridge-demo":
             print(json.dumps(_bridge_demo(), indent=2, sort_keys=True))
             return 0
