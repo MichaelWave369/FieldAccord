@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contract/v0.1/bridge-receipt",
+  "title": "BridgeReceipt FA-03",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "engine",
+    "work_id",
+    "capture_id",
+    "source_kind",
+    "source_locator",
+    "source_payload_sha256",
+    "state_head_sha256",
+    "intent_sha256",
+    "source_epistemic_label",
+    "disposition",
+    "projection",
+    "provenance_authenticated",
+    "source_claims_action_authority",
+    "authority_granted",
+    "action_executed",
+    "notification_dispatched",
+    "history_modified",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.bridge_receipt.v0.1"
+    },
+    "engine": {
+      "const": "fa-03.0.1"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "capture_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "source_kind": {
+      "enum": [
+        "fielddeck.manifest.v0.6",
+        "nbg.epistemic_memory.v1"
+      ]
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "source_payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "state_head_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "intent_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_epistemic_label": {
+      "enum": [
+        "observation",
+        "inference",
+        "unverified"
+      ]
+    },
+    "disposition": {
+      "enum": [
+        "REVIEW_CANDIDATE",
+        "QUARANTINED_AUTHORITY_CLAIM"
+      ]
+    },
+    "projection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projection_kind",
+            "action_count",
+            "actions"
+          ],
+          "properties": {
+            "projection_kind": {
+              "const": "discovery_only"
+            },
+            "action_count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 64
+            },
+            "actions": {
+              "type": "array",
+              "maxItems": 64,
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "id",
+                  "kind",
+                  "status",
+                  "risk"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+                  },
+                  "kind": {
+                    "enum": [
+                      "workflow",
+                      "copy",
+                      "export",
+                      "link",
+                      "future"
+                    ]
+                  },
+                  "status": {
+                    "enum": [
+                      "ready",
+                      "locked"
+                    ]
+                  },
+                  "risk": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projection_kind",
+            "memory_id",
+            "origin_claim",
+            "confidence_claim",
+            "evidence_ids",
+            "record_fingerprint_claim",
+            "source_claims_action_authority",
+            "content_redacted"
+          ],
+          "properties": {
+            "projection_kind": {
+              "const": "untrusted_epistemic_metadata"
+            },
+            "memory_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+            },
+            "origin_claim": {
+              "enum": [
+                "OBSERVED",
+                "VERIFIED",
+                "INFERRED",
+                "DREAMED",
+                "SIMULATED",
+                "UNKNOWN"
+              ]
+            },
+            "confidence_claim": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "evidence_ids": {
+              "type": "array",
+              "maxItems": 32,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+              }
+            },
+            "record_fingerprint_claim": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "source_claims_action_authority": {
+              "type": "boolean"
+            },
+            "content_redacted": {
+              "const": true
+            }
+          }
+        }
+      ]
+    },
+    "provenance_authenticated": {
+      "const": false
+    },
+    "source_claims_action_authority": {
+      "type": "boolean"
+    },
+    "authority_granted": {
+      "const": false
+    },
+    "action_executed": {
+      "const": false
+    },
+    "notification_dispatched": {
+      "const": false
+    },
+    "history_modified": {
+      "const": false
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_claims_action_authority": {
+            "const": true
+          }
+        },
+        "required": [
+          "source_claims_action_authority"
+        ]
+      },
+      "then": {
+        "properties": {
+          "disposition": {
+            "const": "QUARANTINED_AUTHORITY_CLAIM"
+          }
+        }
+      }
+    }
+  ]
+}
