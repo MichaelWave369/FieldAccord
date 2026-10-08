@@ -20,11 +20,13 @@
     },
     "proposal_id": {
       "type": "string",
-      "format": "uuid"
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
     },
     "work_id": {
       "type": "string",
-      "format": "uuid"
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
     },
     "capability_id": {
       "type": "string",
@@ -37,7 +39,8 @@
     "resource": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 512
+      "maxLength": 512,
+      "pattern": "^[^\\s*]{1,512}$"
     },
     "payload_sha256": {
       "type": "string",
@@ -50,7 +53,8 @@
       "items": {
         "type": "string",
         "minLength": 1,
-        "maxLength": 512
+        "maxLength": 512,
+        "pattern": "^[^\\s*]{1,512}$"
       }
     }
   }

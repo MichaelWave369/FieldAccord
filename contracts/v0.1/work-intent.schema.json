@@ -19,7 +19,8 @@
     },
     "work_id": {
       "type": "string",
-      "format": "uuid"
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
     },
     "initiator": {
       "type": "object",
@@ -38,14 +39,16 @@
         "id": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 128
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
         }
       }
     },
     "objective": {
       "type": "string",
       "minLength": 10,
-      "maxLength": 2000
+      "maxLength": 2000,
+      "pattern": "\\S"
     },
     "requested_capabilities": {
       "type": "array",
@@ -78,7 +81,8 @@
           "reference": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 512
+            "maxLength": 512,
+            "pattern": "^[^\\s*]{1,512}$"
           },
           "sha256": {
             "type": "string",
