@@ -307,6 +307,7 @@ def main() -> int:
     sub.add_parser("producer-demo", help="FA-07 synthetic producer to local journal handoff")
     sub.add_parser("native-demo", help="FA-08 synthetic native P1-B sealed packet review")
     sub.add_parser("fetch-fielddeck", help="FA-04 opt-in public GitHub read of reviewed exact commit")
+    sub.add_parser("fetch-cloud-worker", help="FA-CW02 opt-in unverified cloud observation read; public summary only")
     review = sub.add_parser("assess", help="Assess three local JSON files, without execution")
     for name in ("intent", "capability", "proposal"):
         review.add_argument(f"--{name}", type=Path, required=True)
@@ -323,6 +324,10 @@ def main() -> int:
             return 0
         if args.command == "interop-demo":
             print(json.dumps(_interop_demo(), indent=2, sort_keys=True))
+            return 0
+        if args.command == "fetch-cloud-worker":
+            from .cloud_acquisition import acquire_cloud_worker_public
+            print(json.dumps(acquire_cloud_worker_public().summary(), indent=2, sort_keys=True))
             return 0
         if args.command == "fetch-fielddeck":
             print(json.dumps(public_summary(acquire_fielddeck()), indent=2, sort_keys=True))
