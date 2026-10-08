@@ -26,6 +26,8 @@ Field Accord is a **coordination contract**, not a new all-powerful agent. It le
 
 FA-01 through FA-03 and FA-05 through FA-08 remain offline unless an integrating application deliberately connects an external transport. FA-04's `fetch-fielddeck` is a **read-only network operation** and never invokes action workflows or writes to GitHub. No external tools, scripts, credentials, messaging, identity verification, or physical controls are enabled by Field Accord.
 
+- **FA-CW01 (candidate):** offline, intent-pinned FieldCloudWorker observation review, strict GitHub-run metadata correlation, and no-authority stale/failure dispositions. See [FA-CW01](docs/FA-CW01.md).
+
 ## Test locally
 
 Requires Python 3.12+. No third-party dependencies.
