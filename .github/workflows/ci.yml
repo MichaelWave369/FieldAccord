@@ -1,4 +1,4 @@
-name: FA Contract and Continuity Checks
+name: Field Accord Contract, Continuity and Bridge Checks
 
 on:
   push:
@@ -26,5 +26,9 @@ jobs:
         run: |
           python -m fieldaccord work-demo > work-demo.json
           python -c 'import json; r=json.load(open("work-demo.json")); s=r["work_state"]; a=r["attention_decision"]; assert s["status"]=="OPEN" and s["action_executed"] is False and s["authority_granted"] is False and s["notification_dispatched"] is False and a["decision"]=="REVIEW_CANDIDATE" and a["notification_dispatched"] is False and a["authority_granted"] is False'
+      - name: FA-03 synthetic read-only bridge demonstration
+        run: |
+          python -m fieldaccord bridge-demo > bridge-demo.json
+          python -c 'import json; r=json.load(open("bridge-demo.json")); assert r["disposition"]=="REVIEW_CANDIDATE" and r["provenance_authenticated"] is False and r["authority_granted"] is False and r["action_executed"] is False and r["notification_dispatched"] is False and r["history_modified"] is False and "task" not in str(r)'
       - name: JSON contract syntax check
         run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'

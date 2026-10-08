@@ -151,6 +151,8 @@ def inspect_snapshot(
     not malicious-source replacement when the caller itself is compromised.
     """
     base = validate_intent(intent)
+    if "discovery.read" not in base["requested_capabilities"]:
+        raise ContractError("bridge: discovery.read not requested by WorkIntent")
     _match(expected_state_head, SHA256, "expected_state_head")
     _match(expected_payload_sha256, SHA256, "expected_payload_sha256")
     state = replay_work(base, events, expected_head=expected_state_head)

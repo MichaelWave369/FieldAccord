@@ -187,6 +187,12 @@ class ReadOnlyBridgeTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             run(parts)
 
+    def test_discovery_capability_not_requested_refused(self):
+        parts = setup()
+        parts[0]["requested_capabilities"] = []
+        with self.assertRaises(ContractError):
+            run(parts)
+
     def test_unknown_snapshot_field_refused(self):
         parts = setup()
         parts[2]["execution_grant"] = True
@@ -247,7 +253,8 @@ class ReadOnlyBridgeTests(unittest.TestCase):
     def _bad_confidence(self, value):
         payload = memory()
         payload["epistemic"]["confidence"] = value
-        return run(setup(payload, kind=NBG))
+        from fieldaccord.bridge import _nbg
+        return _nbg(payload, "nbg:memory:memory.demo.01")
 
     def test_memory_origin_unknown_preserved(self):
         self.assertEqual(

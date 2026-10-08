@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contract/v0.1/source-snapshot",
+  "title": "SourceSnapshot FA-03",
+  "description": "Caller-supplied, independently fingerprint-pinned input; it carries no grants.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "capture_id",
+    "work_id",
+    "source_kind",
+    "source_locator",
+    "payload_sha256",
+    "payload"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.source_snapshot.v0.1"
+    },
+    "capture_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "work_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "source_kind": {
+      "enum": [
+        "fielddeck.manifest.v0.6",
+        "nbg.epistemic_memory.v1"
+      ]
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}
