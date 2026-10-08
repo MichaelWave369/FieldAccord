@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contracts/v0.1/public-read-summary.schema.json",
+  "title": "FA-04 PublicReadSummary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "repository",
+    "commit_sha",
+    "git_blob_sha",
+    "raw_sha256",
+    "payload_sha256",
+    "pin_sha256",
+    "source_kind",
+    "projection",
+    "source_authorship_authenticated",
+    "authority_granted",
+    "action_executed"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.read_provenance.v0.1"
+    },
+    "repository": {
+      "const": "MichaelWave369/FieldDeck"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "git_blob_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "raw_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "pin_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_kind": {
+      "const": "fielddeck.manifest.v0.7"
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projection_kind",
+        "action_count",
+        "actions"
+      ],
+      "properties": {
+        "projection_kind": {
+          "const": "discovery_only"
+        },
+        "action_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "actions": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "kind",
+              "status",
+              "risk"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "workflow",
+                  "copy",
+                  "export",
+                  "link",
+                  "future"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "locked"
+                ]
+              },
+              "risk": {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "source_authorship_authenticated": {
+      "const": false
+    },
+    "authority_granted": {
+      "const": false
+    },
+    "action_executed": {
+      "const": false
+    }
+  }
+}

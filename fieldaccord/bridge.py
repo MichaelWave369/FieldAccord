@@ -20,6 +20,7 @@ SNAPSHOT_SCHEMA = "fa.source_snapshot.v0.1"
 BRIDGE_SCHEMA = "fa.bridge_receipt.v0.1"
 BRIDGE_ENGINE = "fa-03.0.1"
 FIELDDECK = "fielddeck.manifest.v0.6"
+FIELDDECK_V07 = "fielddeck.manifest.v0.7"
 NBG = "nbg.epistemic_memory.v1"
 FIELDDECK_LOCATOR = "github:MichaelWave369/FieldDeck/public/fielddeck.manifest.json"
 ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}\Z")
@@ -38,11 +39,12 @@ def _flag(value: Any, label: str) -> bool:
     return value
 
 
-def _fielddeck(payload: Any) -> tuple[dict[str, Any], bool]:
+def _fielddeck(payload: Any, source_kind: str = FIELDDECK) -> tuple[dict[str, Any], bool]:
     """Project only the published discovery fields, never commands or URLs."""
     if type(payload) is not dict:
         raise ContractError("FieldDeck: expected object")
-    if payload.get("name") != "FieldDeck" or payload.get("schema_version") != "0.6.0":
+    expected_version = {FIELDDECK: "0.6.0", FIELDDECK_V07: "0.7.0"}.get(source_kind)
+    if payload.get("name") != "FieldDeck" or payload.get("schema_version") != expected_version:
         raise ContractError("FieldDeck: unsupported manifest")
     policy = payload.get("execution_policy")
     if type(policy) is not dict:
@@ -167,7 +169,7 @@ def inspect_snapshot(
     _uuid(obj["work_id"], "snapshot.work_id")
     if obj["work_id"] != base["work_id"]:
         raise ContractError("bridge: cross-work snapshot")
-    if obj["source_kind"] not in (FIELDDECK, NBG):
+    if obj["source_kind"] not in (FIELDDECK, FIELDDECK_V07, NBG):
         raise ContractError("bridge: unsupported source kind")
     locator = _string(obj["source_locator"], "source_locator", 1, 512)
     _match(obj["payload_sha256"], SHA256, "payload_sha256")
@@ -187,10 +189,10 @@ def inspect_snapshot(
     ]
     if len(matching) != 1:
         raise ContractError("bridge: source not pinned by WorkIntent")
-    if obj["source_kind"] == FIELDDECK:
+    if obj["source_kind"] in (FIELDDECK, FIELDDECK_V07):
         if locator != FIELDDECK_LOCATOR:
             raise ContractError("bridge: unexpected FieldDeck locator")
-        projection, claimed = _fielddeck(obj["payload"])
+        projection, claimed = _fielddeck(obj["payload"], obj["source_kind"])
     else:
         projection, claimed = _nbg(obj["payload"], locator)
 

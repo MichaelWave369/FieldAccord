@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 
 from fieldaccord.bridge import (
-    FIELDDECK, FIELDDECK_LOCATOR, NBG, inspect_snapshot,
+    FIELDDECK, FIELDDECK_V07, FIELDDECK_LOCATOR, NBG, inspect_snapshot,
 )
 from fieldaccord.continuity import GENESIS, make_event
 from fieldaccord.core import ContractError, digest
@@ -67,7 +67,7 @@ def setup(payload=None, kind=FIELDDECK, locator=None):
         payload = deck() if kind == FIELDDECK else memory()
     if locator is None:
         locator = (
-            FIELDDECK_LOCATOR if kind == FIELDDECK else "nbg:memory:memory.demo.01"
+            FIELDDECK_LOCATOR if kind in (FIELDDECK, FIELDDECK_V07) else "nbg:memory:memory.demo.01"
         )
     fingerprint = digest(payload)
     intent = {
@@ -209,9 +209,23 @@ class ReadOnlyBridgeTests(unittest.TestCase):
         with self.assertRaises(ContractError):
             run(parts)
 
-    def test_unsupported_manifest_version_refused(self):
+    def test_fielddeck_v07_is_read_only(self):
         payload = deck()
         payload["schema_version"] = "0.7.0"
+        receipt = run(setup(payload, kind="fielddeck.manifest.v0.7"))
+        self.assertEqual(receipt["projection"]["action_count"], 2)
+        self.assertFalse(receipt["authority_granted"])
+        self.assertFalse(receipt["action_executed"])
+
+    def test_manifest_version_kind_mismatch_refused(self):
+        payload = deck()
+        payload["schema_version"] = "0.7.0"
+        with self.assertRaises(ContractError):
+            run(setup(payload, kind=FIELDDECK))
+
+    def test_unsupported_manifest_version_refused(self):
+        payload = deck()
+        payload["schema_version"] = "0.8.0"
         with self.assertRaises(ContractError):
             run(setup(payload))
 

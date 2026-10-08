@@ -29,6 +29,7 @@
     "source_kind": {
       "enum": [
         "fielddeck.manifest.v0.6",
+        "fielddeck.manifest.v0.7",
         "nbg.epistemic_memory.v1"
       ]
     },

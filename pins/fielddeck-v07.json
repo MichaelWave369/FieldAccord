@@ -1,0 +1,11 @@
+{
+  "schema": "fa.source_pin.v0.1",
+  "provider": "github_public_contents",
+  "repository": "MichaelWave369/FieldDeck",
+  "path": "public/fielddeck.manifest.json",
+  "commit_sha": "b947a50aa552e47f05f88d4e0cfc5bdafc35d6b5",
+  "git_blob_sha": "9116b57eed7a7ed62803459440ab2e0985222ac8",
+  "manifest_version": "0.7.0",
+  "source_kind": "fielddeck.manifest.v0.7",
+  "source_locator": "github:MichaelWave369/FieldDeck/public/fielddeck.manifest.json"
+}

@@ -5,6 +5,7 @@ from .core import (
     validate_intent, validate_capability, validate_proposal,
 )
 from .bridge import inspect_snapshot
+from .acquisition import acquire_fielddeck, inspect_acquired_fielddeck
 from .continuity import (
     GENESIS, attention_review, make_event, replay_work, validate_event,
 )
@@ -12,6 +13,8 @@ from .continuity import (
 __all__ = [
     "ContractError",
     "inspect_snapshot",
+    "acquire_fielddeck",
+    "inspect_acquired_fielddeck",
     "assess",
     "receipt_digest_is_valid",
     "validate_intent",
