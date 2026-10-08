@@ -1,6 +1,7 @@
 """FA-07 producer adapter and bounded local frame qualifications, all offline."""
 
 from copy import deepcopy
+from contextlib import closing
 import os
 from pathlib import Path
 import socket
@@ -238,7 +239,8 @@ class ProducerTests(unittest.TestCase):
     def test_full_vessie_producer_to_journal_over_local_socketpair(self):
         signed = envelope()
         intent, opened = open_work(signed)
-        with socket.socketpair() as (writer, reader):
+        a, b = socket.socketpair()
+        with closing(a) as writer, closing(b) as reader:
             writer.sendall(frame_export(signed))
             writer.shutdown(socket.SHUT_WR)
             received = b""
