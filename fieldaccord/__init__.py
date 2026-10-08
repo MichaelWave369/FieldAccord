@@ -17,6 +17,7 @@ from .producers import (
 )
 from .acquisition import acquire_fielddeck, inspect_acquired_fielddeck
 from .cloud_worker import inspect_cloud_worker
+from .cloud_acquisition import acquire_cloud_worker_public, CloudPublicAcquisition
 from .continuity import (
     GENESIS, attention_review, make_event, replay_work, validate_event,
 )
@@ -39,6 +40,8 @@ __all__ = [
     "decode_export_frame",
     "admit_export_frame",
     "inspect_cloud_worker",
+    "acquire_cloud_worker_public",
+    "CloudPublicAcquisition",
     "acquire_fielddeck",
     "inspect_acquired_fielddeck",
     "assess",

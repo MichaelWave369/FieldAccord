@@ -95,3 +95,12 @@ Run also:
 - Treat a matching run as metadata correlation only, never authorship, content attestation, consent, or authority.
 - Reject unknown tasks, output extensions, modified history, stale-as-healthy claims, and wrong workflow/branch/SHA.
 - This rung cannot dispatch jobs, import memory, notify people, or authorize physical/network actions.
+
+## FA-CW02 opt-in public cloud read
+
+- Only four fixed HTTPS GET resources per explicit invocation: main branch commit, status/history at that commit, and the linked public workflow run.
+- No tokens, retries, redirect following, unbounded responses, POSTs, webhook calls or implicit polling.
+- Main-branch snapshot and blob integrity DO NOT constitute an independent trusted source pin. Public summary must always say independent_prior_pin_verified=false.
+- Do not use fresh fetched bytes to retroactively establish independent WorkIntent pins. FA-CW01 admission still requires previously established independent anchors.
+- Return only bounded task/status metadata in CLI. No raw outputs, prompt content, authorization, notification or memory admission.
+- Default CI tests must remain offline and use injected transport fakes.

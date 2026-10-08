@@ -28,6 +28,8 @@ FA-01 through FA-03 and FA-05 through FA-08 remain offline unless an integrating
 
 - **FA-CW01 (candidate):** offline, intent-pinned FieldCloudWorker observation review, strict GitHub-run metadata correlation, and no-authority stale/failure dispositions. See [FA-CW01](docs/FA-CW01.md).
 
+- **FA-CW02 (candidate):** opt-in live public GitHub acquisition of a consistent FieldCloudWorker status/history commit and matching run metadata. Discovery remains unverified and no-authority. See [FA-CW02](docs/FA-CW02.md).
+
 ## Test locally
 
 Requires Python 3.12+. No third-party dependencies.
@@ -43,6 +45,8 @@ python -m fieldaccord producer-demo
 python -m fieldaccord native-demo
 # Optional: makes one public read-only GitHub API request
 python -m fieldaccord fetch-fielddeck
+# Optional: four strictly allowlisted read-only GitHub GETs; unverified summary
+python -m fieldaccord fetch-cloud-worker
 ```
 
 The `demo`, `work-demo`, `bridge-demo`, and `interop-demo`, and `handoff-demo`, and `producer-demo`, and `native-demo` demonstrations use synthetic data and produce **no network activity**. A `REVIEW_CANDIDATE` is a suggestion for a human-governed UI, **not** a notification or permission.
