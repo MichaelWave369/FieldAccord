@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contract/v0.1/work-intent",
+  "title": "WorkIntent FA-01",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "work_id",
+    "initiator",
+    "objective",
+    "requested_capabilities",
+    "attention_policy",
+    "context_refs"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.work_intent.v0.1"
+    },
+    "work_id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "initiator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:@/-]{0,127}$"
+        }
+      }
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 2000,
+      "pattern": "\\S"
+    },
+    "requested_capabilities": {
+      "type": "array",
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$"
+      }
+    },
+    "attention_policy": {
+      "enum": [
+        "quiet",
+        "important",
+        "collaborate"
+      ]
+    },
+    "context_refs": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reference",
+          "sha256",
+          "epistemic"
+        ],
+        "properties": {
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^[^\\s*]{1,512}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "epistemic": {
+            "enum": [
+              "observation",
+              "inference",
+              "unverified"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

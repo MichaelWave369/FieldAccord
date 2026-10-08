@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MichaelWave369/FieldAccord/contract/v0.1/work-receipt",
+  "title": "WorkReceipt FA-01",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "engine",
+    "work_id",
+    "proposal_id",
+    "decision",
+    "reason",
+    "declared_effect",
+    "authority_granted",
+    "action_executed",
+    "referenced_evidence",
+    "input_digests",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "fa.work_receipt.v0.1"
+    },
+    "engine": {
+      "const": "fa-01.0.1"
+    },
+    "work_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "proposal_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "decision": {
+      "enum": [
+        "BLOCKED",
+        "REVIEW_REQUIRED"
+      ]
+    },
+    "reason": {
+      "enum": [
+        "WORK_ID_MISMATCH",
+        "CAPABILITY_MISMATCH",
+        "UNREQUESTED_CAPABILITY",
+        "RESOURCE_OUT_OF_SCOPE",
+        "EVIDENCE_NOT_IN_CONTEXT",
+        "NO_EXECUTION_AUTHORITY"
+      ]
+    },
+    "declared_effect": {
+      "enum": [
+        "read",
+        "write",
+        "external",
+        "physical"
+      ]
+    },
+    "authority_granted": {
+      "const": false
+    },
+    "action_executed": {
+      "const": false
+    },
+    "referenced_evidence": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "input_digests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intent",
+        "capability",
+        "proposal"
+      ],
+      "properties": {
+        "intent": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "capability": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "proposal": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+name: FA-01 Contract Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-contract-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Contract and negative-control tests
+        run: python -m unittest discover -s tests -v
+      - name: Synthetic review-only demonstration
+        run: |
+          python -m fieldaccord demo > receipt.json
+          python -c 'import json; r=json.load(open("receipt.json")); assert r["decision"]=="REVIEW_REQUIRED" and r["authority_granted"] is False and r["action_executed"] is False'
+      - name: JSON contract syntax check
+        run: python -c 'import json,pathlib; [json.loads(p.read_text()) for p in pathlib.Path("contracts").rglob("*.json")]'
