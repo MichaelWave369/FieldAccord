@@ -4,7 +4,7 @@ from copy import deepcopy
 import unittest
 
 from fieldaccord.bridge import (
-    FIELDDECK, FIELDDECK_LOCATOR, NBG, inspect_snapshot,
+    FIELDDECK, FIELDDECK_V07, FIELDDECK_LOCATOR, NBG, inspect_snapshot,
 )
 from fieldaccord.continuity import GENESIS, make_event
 from fieldaccord.core import ContractError, digest
@@ -67,7 +67,7 @@ def setup(payload=None, kind=FIELDDECK, locator=None):
         payload = deck() if kind == FIELDDECK else memory()
     if locator is None:
         locator = (
-            FIELDDECK_LOCATOR if kind == FIELDDECK else "nbg:memory:memory.demo.01"
+            FIELDDECK_LOCATOR if kind in (FIELDDECK, FIELDDECK_V07) else "nbg:memory:memory.demo.01"
         )
     fingerprint = digest(payload)
     intent = {
