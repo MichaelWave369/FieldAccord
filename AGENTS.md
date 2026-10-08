@@ -87,3 +87,11 @@ Run also:
 - No production key material in CI or repository. Never claim source hash validates author identity.
 
     python -m fieldaccord native-demo
+
+## FA-CW01 cloud observation boundary
+
+- Read only supplied, strictly bounded observation records and GitHub run metadata. Never fetch or invoke.
+- Source SHA-256 must be pinned by a pre-existing WorkIntent and separately anchored WorkEvent head.
+- Treat a matching run as metadata correlation only, never authorship, content attestation, consent, or authority.
+- Reject unknown tasks, output extensions, modified history, stale-as-healthy claims, and wrong workflow/branch/SHA.
+- This rung cannot dispatch jobs, import memory, notify people, or authorize physical/network actions.
