@@ -82,3 +82,18 @@ The `demo`, `work-demo`, `bridge-demo`, and `interop-demo`, and `handoff-demo`, 
 Experimental. FA-02's event chain is **not** a trusted distributed event bus, a durable storage engine, or an authenticated notification grant. FA-03's expected digests and projections likewise are **not** source authentication or a tool execution path. FA-04 pins a published public GitHub blob, not a human identity, trusted timeline, operator consent, or a live automation authorization. Replacing a pin must go through human code review. FA-05 is metadata inspection only: it does not authenticate upstream identity or admit context into a model. FA-06's shared-key authentication only proves key possession and SQLite replay protection only covers one local database, not global identity, consent, or an immutable ledger. FA-07 adds an embeddable producer SDK, **not** a deployed Vessie/PhiOS connector or a remotely authenticated transport. FA-08 validates the **actual** upstream source formats, but it still does not automatically install or activate hooks inside Vessie/PhiOS. Prove remaining boundaries before wiring any execution.
 
 **Enter the Field. Carbon and silicon, building together.**
+
+
+## Interactive React showcase (public, synthetic)
+
+FieldAccord also has a visual React/Vite site in [site/](site/), intended for publication at
+[https://michaelwave369.github.io/FieldAccord/](https://michaelwave369.github.io/FieldAccord/).
+
+It illustrates the protocol's WorkIntent/ActionProposal assessment, work continuity, source
+bridges and seven no-authority laws. Its in-browser actions are **synthetic examples only**.
+It does not use the canonical Python policy kernel, connect to agents or private accounts,
+verify signatures, persist records, grant permissions, send notifications or execute tools.
+
+To publish, use **Settings > Pages > GitHub Actions** and the
+[Deploy FieldAccord Showcase](.github/workflows/pages.yml) workflow. The Python protocol and
+its offline tests remain independent of the public presentation.
